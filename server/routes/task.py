@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from database import tasks_collection
 from bson import ObjectId
 
-router = APIRouter(prefix="/tasks")
+router = APIRouter()   # ❌ REMOVE prefix here
 
 
 # ➕ Add task
@@ -23,7 +23,7 @@ def get_all_tasks():
     return tasks
 
 
-# ✅ Get USER tasks (MAIN FEATURE)
+# ✅ Get USER tasks
 @router.get("/{user}")
 def get_user_tasks(user: str):
     tasks = list(tasks_collection.find({"user": user}))
@@ -34,7 +34,7 @@ def get_user_tasks(user: str):
     return tasks
 
 
-# ✅ Toggle complete
+# ✅ Update (toggle complete)
 @router.put("/{id}")
 def update_task(id: str, data: dict):
     tasks_collection.update_one(
@@ -54,7 +54,7 @@ def edit_task(id: str, data: dict):
     return {"message": "Task updated"}
 
 
-# ❌ Delete task
+# ❌ Delete
 @router.delete("/{id}")
 def delete_task(id: str):
     tasks_collection.delete_one({"_id": ObjectId(id)})
